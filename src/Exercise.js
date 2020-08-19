@@ -20,6 +20,8 @@ class Exercise extends Component {
       start: false,
       questions: [],
       input: "",
+      score: 0,
+      timeProgress: 0,
     };
   }
   handleRangeChange = (event, newValue) => {
@@ -43,7 +45,7 @@ class Exercise extends Component {
     });
   };
   handleStart = () => {
-    this.setState({ start: true }, () => {
+    this.setState({ start: true, questions: [], input: "", score: 0 }, () => {
       this.generateQuestion();
     });
   };
@@ -62,7 +64,24 @@ class Exercise extends Component {
   checkForCorrectAnswer = () => {
     let currentRound = this.state.questions.length;
     let answer = this.state.questions[currentRound - 1].answer;
-    console.log(answer === parseInt(this.state.input));
+    if (answer === parseInt(this.state.input)) {
+      this.setState(
+        (curState) => {
+          return {
+            score: curState.score + 1,
+            input: "",
+          };
+        },
+        () => {
+          if (currentRound < this.state.rounds) {
+            this.generateQuestion();
+          } else {
+            alert(this.state.score + "/" + this.state.rounds);
+            this.handleStop();
+          }
+        }
+      );
+    }
   };
   generateQuestion = () => {
     let min = this.state.rangeSliderValue[0];
@@ -72,7 +91,33 @@ class Exercise extends Component {
     let currentRound = this.state.questions.length + 1;
     const newQuestions = [...this.state.questions];
     newQuestions.push({ p1, p2, answer: p1 * p2, round: currentRound });
-    this.setState({ questions: newQuestions });
+    this.setState({ questions: newQuestions, timeProgress: 0 }, () => {
+      this.startTimer(currentRound);
+    });
+  };
+  startTimer = (currentRound) => {
+    let intervalID = setInterval(() => {
+      if (this.state.timeProgress >= 100) {
+        console.log("too late");
+        clearInterval(intervalID);
+        if (currentRound < this.state.rounds) {
+          this.generateQuestion();
+        } else {
+          alert(this.state.score + "/" + this.state.rounds);
+          this.handleStop();
+        }
+      } else if (this.state.questions.length !== currentRound) {
+        console.log("finished early so turning off");
+        clearInterval(intervalID);
+      } else {
+        console.log(currentRound);
+        this.setState((curState) => {
+          return {
+            timeProgress: curState.timeProgress + 100 / this.state.time,
+          };
+        });
+      }
+    }, 1000);
   };
   render = () => {
     return (
@@ -155,7 +200,10 @@ class Exercise extends Component {
               Stop
             </Button>
             <Card className="Exercise-card">
-              <LinearProgress variant="determinate" value={100} />
+              <LinearProgress
+                variant="determinate"
+                value={this.state.timeProgress}
+              />
               <CardContent>
                 <Typography gutterBottom>
                   Round: {this.state.questions.length} / {this.state.rounds}
