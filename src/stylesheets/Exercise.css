@@ -1,0 +1,30 @@
+.Exercise {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.Exercise-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
+}
+.Exercise-card {
+  margin: 1rem;
+}
+@media (min-width: 1024px) {
+  .Exercise-bottom {
+    width: 50%;
+  }
+}
+/* to hide increment wheel */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
