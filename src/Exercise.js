@@ -100,9 +100,9 @@ class Exercise extends Component {
       if (this.state.timeProgress >= 100) {
         this.setState({ input: "" }, () => {
           clearInterval(intervalID);
-          if (currentRound < this.state.rounds) {
+          if (currentRound < this.state.rounds && this.state.start) {
             this.generateQuestion();
-          } else {
+          } else if (this.state.start) {
             this.setState({ finish: true, start: false });
           }
         });
