@@ -22,6 +22,7 @@ class Exercise extends Component {
       input: "",
       score: 0,
       timeProgress: 0,
+      finish: false,
     };
   }
   handleRangeChange = (event, newValue) => {
@@ -50,7 +51,7 @@ class Exercise extends Component {
     });
   };
   handleStop = () => {
-    this.setState({ start: false });
+    this.setState({ start: false, finish: false });
   };
   // For ARIA
   valuetext = (value) => {
@@ -76,8 +77,7 @@ class Exercise extends Component {
           if (currentRound < this.state.rounds) {
             this.generateQuestion();
           } else {
-            alert(this.state.score + "/" + this.state.rounds);
-            this.handleStop();
+            this.setState({ finish: true, start: false });
           }
         }
       );
@@ -98,19 +98,18 @@ class Exercise extends Component {
   startTimer = (currentRound) => {
     let intervalID = setInterval(() => {
       if (this.state.timeProgress >= 100) {
-        console.log("too late");
-        clearInterval(intervalID);
-        if (currentRound < this.state.rounds) {
-          this.generateQuestion();
-        } else {
-          alert(this.state.score + "/" + this.state.rounds);
-          this.handleStop();
-        }
+        this.setState({ input: "" }, () => {
+          clearInterval(intervalID);
+          if (currentRound < this.state.rounds) {
+            this.generateQuestion();
+          } else {
+            this.setState({ finish: true, start: false });
+          }
+        });
       } else if (this.state.questions.length !== currentRound) {
         console.log("finished early so turning off");
         clearInterval(intervalID);
       } else {
-        console.log(currentRound);
         this.setState((curState) => {
           return {
             timeProgress: curState.timeProgress + 100 / this.state.time,
@@ -119,10 +118,20 @@ class Exercise extends Component {
       }
     }, 1000);
   };
+  handleSkip = () => {
+    let currentRound = this.state.questions.length;
+    this.setState({ input: "" }, () => {
+      if (currentRound < this.state.rounds) {
+        this.generateQuestion();
+      } else {
+        this.setState({ finish: true, start: false });
+      }
+    });
+  };
   render = () => {
     return (
       <div className="Exercise">
-        {!this.state.start && (
+        {!this.state.start && !this.state.finish && (
           <div className="Exercise-top">
             <Typography id="range-tables" gutterBottom>
               Range of multiplication tables
@@ -221,7 +230,25 @@ class Exercise extends Component {
                 />
               </CardContent>
               <CardActions>
-                <Button size="small">Skip</Button>
+                <Button size="small" onClick={this.handleSkip}>
+                  Skip
+                </Button>
+              </CardActions>
+            </Card>
+          </div>
+        )}
+        {!this.state.start && this.state.finish && (
+          <div className="Exercise-score">
+            <Card className="Exercise-card">
+              <CardContent>
+                <Typography gutterBottom>
+                  Your Score is {this.state.score} / {this.state.rounds}.
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button size="small" onClick={this.handleStop}>
+                  Continue
+                </Button>
               </CardActions>
             </Card>
           </div>
