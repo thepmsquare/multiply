@@ -1,4 +1,4 @@
-# tables-exercise-react
+# multiplication-tables-exercise-react
 
 A utility to practise / memorize multiplication tables made with ReactJS.
 
