@@ -1,5 +1,7 @@
 # multiply
 
+A utility to practise / memorize multiplication tables.
+
 ![](multiply.gif)
 
 Feedback is appreciated. Thank you!
