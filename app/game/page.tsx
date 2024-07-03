@@ -1,18 +1,16 @@
 "use client";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import ThemeToggleFAB from "@/components/ThemeToggleFAB";
-import brandConfig from "@/configs/brand";
 import localStorageVariablesConfig from "@/configs/localStorageVariables";
 import uiConfig from "@/configs/ui";
-import { Button, CssBaseline, Paper, Typography } from "@mui/material";
+import { CssBaseline, Paper, Typography } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import styles from "./page.module.css";
 
 import type { PaletteOptions } from "@mui/material/styles";
-export default function Home() {
+export default function Game() {
   // state
   const [currentThemePalette, changeCurrentThemePalette] = useState<
     PaletteOptions["mode"]
@@ -61,14 +59,8 @@ export default function Home() {
       <Paper className={styles.main} square>
         <div className={styles.center}>
           <Typography color="primary" variant="h2" component="h1">
-            {brandConfig.name}
+            game start
           </Typography>
-          <Typography>{brandConfig.description}</Typography>
-          <Link href="/game">
-            <Button variant="contained" size="large" fullWidth>
-              Start
-            </Button>
-          </Link>
         </div>
       </Paper>
       <ThemeToggleFAB

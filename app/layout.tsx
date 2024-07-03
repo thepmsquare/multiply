@@ -5,7 +5,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
-import brandConfig from "@/config/brand";
+import brandConfig from "@/configs/brand";
 
 export const metadata: Metadata = {
   title: brandConfig.name,
