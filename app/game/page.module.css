@@ -6,9 +6,5 @@
   justify-content: center;
 }
 .center {
-  display: flex;
   width: 80vw;
-  text-align: center;
-  flex-direction: column;
-  gap: 2rem;
 }

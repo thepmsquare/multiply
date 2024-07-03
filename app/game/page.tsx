@@ -4,7 +4,19 @@ import { useEffect, useState } from "react";
 import ThemeToggleFAB from "@/components/ThemeToggleFAB";
 import localStorageVariablesConfig from "@/configs/localStorageVariables";
 import uiConfig from "@/configs/ui";
-import { CssBaseline, Paper, Typography } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  CardMedia,
+  CssBaseline,
+  LinearProgress,
+  Paper,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import styles from "./page.module.css";
@@ -57,11 +69,22 @@ export default function Game() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Paper className={styles.main} square>
-        <div className={styles.center}>
-          <Typography color="primary" variant="h2" component="h1">
-            game start
-          </Typography>
-        </div>
+        <Card className={styles.center}>
+          <LinearProgress value={33} variant="determinate" />
+          <CardHeader title="5 * 3 = " />
+          <CardContent>
+            <TextField
+              fullWidth
+              autoFocus
+              type="number"
+              required
+              label="answer"
+            />
+          </CardContent>
+          <CardActions>
+            <Button>skip</Button>
+          </CardActions>
+        </Card>
       </Paper>
       <ThemeToggleFAB
         handleThemeToggle={handleThemeToggle}
