@@ -1,21 +1,27 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import ThemeToggleFAB from "@/components/ThemeToggleFAB";
 import localStorageVariablesConfig from "@/configs/localStorageVariables";
 import uiConfig from "@/configs/ui";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import {
   Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
-  CardMedia,
+  Chip,
   CssBaseline,
+  Dialog,
+  DialogActions,
+  DialogTitle,
   LinearProgress,
   Paper,
   TextField,
-  Typography,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -27,6 +33,7 @@ export default function Game() {
   const [currentThemePalette, changeCurrentThemePalette] = useState<
     PaletteOptions["mode"]
   >(uiConfig.defaultThemePalette);
+  const [isExitDialogOpen, changeIsExitDialogOpen] = useState(false);
   // functions
   const handleThemeToggle = () => {
     let newThemePalette: PaletteOptions["mode"] =
@@ -72,7 +79,7 @@ export default function Game() {
         <Card className={styles.center}>
           <LinearProgress value={33} variant="determinate" />
           <CardHeader title="5 * 3 = " />
-          <CardContent>
+          <CardContent className={styles.content}>
             <TextField
               fullWidth
               autoFocus
@@ -80,12 +87,57 @@ export default function Game() {
               required
               label="answer"
             />
+            <div className={styles.chips}>
+              <Chip
+                size="small"
+                label="Lives Left: 2"
+                icon={<FavoriteIcon />}
+              />
+              <Chip
+                size="small"
+                label="Current Score: 2"
+                color="success"
+                variant="outlined"
+                icon={<SportsScoreIcon />}
+              />
+              <Chip
+                size="small"
+                label="Previous best score: 5"
+                color="success"
+                icon={<EmojiEventsIcon />}
+              />
+            </div>
           </CardContent>
           <CardActions>
-            <Button>skip</Button>
+            <Button variant="outlined">skip</Button>
+            <Button
+              color="error"
+              variant="outlined"
+              onClick={() => changeIsExitDialogOpen(true)}
+            >
+              exit
+            </Button>
           </CardActions>
         </Card>
       </Paper>
+      <Dialog
+        open={isExitDialogOpen}
+        onClose={() => changeIsExitDialogOpen(false)}
+        aria-labelledby="exit-dialog-title"
+      >
+        <DialogTitle id="alert-dialog-title">
+          Are you sure you want to exit?
+        </DialogTitle>
+
+        <DialogActions>
+          <Button onClick={() => changeIsExitDialogOpen(false)}>Cancel</Button>
+          <Link href="/">
+            <Button autoFocus color="error">
+              Yes
+            </Button>
+          </Link>
+        </DialogActions>
+      </Dialog>
       <ThemeToggleFAB
         handleThemeToggle={handleThemeToggle}
         currentThemePalette={currentThemePalette}
