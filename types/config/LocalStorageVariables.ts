@@ -1,4 +1,2 @@
-interface LocalStorageVariablesConfig {
-  themePaletteKeyName: string;
-}
+interface LocalStorageVariablesConfig {}
 export default LocalStorageVariablesConfig;

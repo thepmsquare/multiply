@@ -1,7 +1,5 @@
 import LocalStorageVariablesConfig from "@/types/config/LocalStorageVariables";
 
-const localStorageVariablesConfig: LocalStorageVariablesConfig = {
-  themePaletteKeyName: "multiply-savedThemePalette",
-};
+const localStorageVariablesConfig: LocalStorageVariablesConfig = {};
 
 export default localStorageVariablesConfig;
