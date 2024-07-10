@@ -24,7 +24,7 @@ export default function Home() {
 
   // use effect
   // misc
-  console.log(multiplyImage);
+
   return (
     <div className="flex justify-center items-center h-screen w-screen">
       <Card className="max-w-[80%]">
