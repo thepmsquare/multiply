@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { useState } from "react";
 import { IoMdHeart, IoMdTrophy } from "react-icons/io";
 import { MdSportsScore } from "react-icons/md";
 
@@ -12,13 +14,18 @@ import {
   CardHeader,
   Divider,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Progress,
+  useDisclosure,
 } from "@nextui-org/react";
-import { semanticColors } from "@nextui-org/theme";
 
 export default function Game() {
   // state
-
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
   // functions
 
   // use effect
@@ -53,12 +60,30 @@ export default function Game() {
         <Divider />
         <CardFooter className="flex gap-4">
           <Button className="w-full">skip</Button>
-          <Button color="danger" className="w-full">
+          <Button color="danger" className="w-full" onPress={onOpen}>
             exit
           </Button>
         </CardFooter>
       </Card>
-
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                confirmation for exit
+              </ModalHeader>
+              <ModalFooter>
+                <Button variant="light" onPress={onClose}>
+                  cancel
+                </Button>
+                <Link href="/">
+                  <Button color="danger">exit</Button>
+                </Link>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
       <ThemeToggleFAB />
     </div>
   );
