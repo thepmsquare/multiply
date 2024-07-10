@@ -10,11 +10,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import SportsScoreIcon from "@mui/icons-material/SportsScore";
 import {
   Button,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  Chip,
   CssBaseline,
   Dialog,
   DialogActions,
@@ -22,6 +17,7 @@ import {
   LinearProgress,
   Paper,
   TextField,
+  Typography
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
@@ -76,49 +72,60 @@ export default function Game() {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Paper className={styles.main} square>
-        <Card className={styles.center}>
-          <LinearProgress value={33} variant="determinate" />
-          <CardHeader title="5 * 3 = " />
-          <CardContent className={styles.content}>
-            <TextField
-              fullWidth
-              autoFocus
-              type="number"
-              required
-              label="answer"
-            />
-            <div className={styles.chips}>
-              <Chip
-                size="small"
-                label="Lives Left: 2"
-                icon={<FavoriteIcon />}
-              />
-              <Chip
-                size="small"
-                label="Current Score: 2"
-                color="success"
-                variant="outlined"
-                icon={<SportsScoreIcon />}
-              />
-              <Chip
-                size="small"
-                label="Previous best score: 5"
-                color="success"
-                icon={<EmojiEventsIcon />}
-              />
-            </div>
-          </CardContent>
-          <CardActions>
-            <Button variant="outlined">skip</Button>
+        <div className={styles.content}>
+          <div className={styles.chips}>
             <Button
+              variant="contained"
+              startIcon={<EmojiEventsIcon />}
+              color="primary"
+            >
+              Previous best score: 5
+            </Button>
+            <Button
+              color="success"
+              variant="outlined"
+              startIcon={<SportsScoreIcon />}
+            >
+              Current Score: 2
+            </Button>
+            <Button
+              startIcon={<FavoriteIcon />}
               color="error"
               variant="outlined"
-              onClick={() => changeIsExitDialogOpen(true)}
             >
-              exit
+              Lives Left: 2
             </Button>
-          </CardActions>
-        </Card>
+          </div>
+          <div className={styles.cardContainer}>
+            <div className={styles.card}>
+              <Typography
+                className={styles.cardTitle}
+                variant="h3"
+                component="h2"
+              >
+                5 * 3
+              </Typography>
+              <LinearProgress
+                value={33}
+                variant="determinate"
+                className={styles.progressBar}
+              />
+
+              <TextField fullWidth autoFocus type="number" label="answer" />
+
+              <div className={styles.cardActions}>
+                <Button variant="outlined">skip</Button>
+                <Button
+                  color="error"
+                  variant="outlined"
+                  onClick={() => changeIsExitDialogOpen(true)}
+                >
+                  exit
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
       </Paper>
       <Dialog
         open={isExitDialogOpen}
