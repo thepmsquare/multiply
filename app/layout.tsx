@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import brandConfig from "@/configs/brand";
+import uiConfig from "@/configs/ui";
 
 import { Providers } from "./providers";
 
@@ -16,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={uiConfig.defaultThemePalette}>
       <body>
         <Providers>{children}</Providers>
       </body>
