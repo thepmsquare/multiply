@@ -1,5 +1,4 @@
-import type { PaletteOptions } from "@mui/material/styles";
 interface UIConfig {
-  defaultThemePalette: PaletteOptions["mode"];
+  defaultThemePalette: "dark" | "light";
 }
 export default UIConfig;

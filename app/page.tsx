@@ -1,50 +1,17 @@
 "use client";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import ThemeToggleFAB from "@/components/ThemeToggleFAB";
-import brandConfig from "@/configs/brand";
-import localStorageVariablesConfig from "@/configs/localStorageVariables";
-import uiConfig from "@/configs/ui";
-
-import styles from "./page.module.css";
 
 export default function Home() {
   // state
-  const [currentThemePalette, changeCurrentThemePalette] = useState(
-    uiConfig.defaultThemePalette
-  );
-  // functions
-  const handleThemeToggle = () => {
-    let newThemePalette = currentThemePalette === "light" ? "dark" : "light";
-    changeCurrentThemePalette(newThemePalette);
-    window.localStorage.setItem(
-      localStorageVariablesConfig.themePaletteKeyName,
-      newThemePalette
-    );
-  };
-  // use effect
-  useEffect(() => {
-    // load from local storage
-    let savedThemePalette = window.localStorage.getItem(
-      localStorageVariablesConfig.themePaletteKeyName
-    );
-    let selectedThemePalette;
-    if (savedThemePalette) {
-      selectedThemePalette = savedThemePalette;
-    } else {
-      selectedThemePalette = uiConfig.defaultThemePalette;
-      if (uiConfig.defaultThemePalette) {
-        window.localStorage.setItem(
-          localStorageVariablesConfig.themePaletteKeyName,
-          uiConfig.defaultThemePalette
-        );
-      } else {
-        // pass
-      }
-    }
-    changeCurrentThemePalette(selectedThemePalette);
-  }, []);
 
-  return <div>hi</div>;
+  // functions
+
+  // use effect
+
+  return (
+    <div>
+      <ThemeToggleFAB />
+    </div>
+  );
 }

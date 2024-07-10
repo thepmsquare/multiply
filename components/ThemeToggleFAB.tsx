@@ -1,25 +1,27 @@
-import styles from "@/components/stylesheets/ThemeToggleFAB.module.css";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
-import { Fab } from "@mui/material";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
-import type { PaletteOptions } from "@mui/material/styles";
-function ThemeToggleFAB(props: {
-  handleThemeToggle: () => void;
-  currentThemePalette: PaletteOptions["mode"];
-}) {
+import { Button } from "@nextui-org/button";
+
+function ThemeToggleFAB() {
+  // state
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme();
+  // functions
+  const handleThemeToggle = () => {
+    let newThemePalette = theme === "light" ? "dark" : "light";
+    setTheme(newThemePalette);
+  };
+  // use effect
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  // misc
+  if (!mounted) return null;
   return (
-    <Fab
-      onClick={props.handleThemeToggle}
-      className={styles.main}
-      color="primary"
-    >
-      {props.currentThemePalette === "light" ? (
-        <DarkModeIcon />
-      ) : (
-        <LightModeIcon />
-      )}
-    </Fab>
+    <Button onClick={handleThemeToggle} className="fixed bottom-4 right-4">
+      toggle theme
+    </Button>
   );
 }
 
