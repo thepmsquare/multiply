@@ -1,6 +1,9 @@
 "use client";
 
+import Link from "next/link";
+
 import ThemeToggleFAB from "@/components/ThemeToggleFAB";
+import { Button } from "@nextui-org/react";
 
 export default function Home() {
   // state
@@ -10,7 +13,10 @@ export default function Home() {
   // use effect
 
   return (
-    <div>
+    <div className="flex justify-center items-center h-full w-full">
+      <Link href="/game">
+        <Button color="primary">start</Button>
+      </Link>
       <ThemeToggleFAB />
     </div>
   );
