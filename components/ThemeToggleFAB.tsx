@@ -9,7 +9,11 @@ function ThemeToggleFAB(props: {
   currentThemePalette: PaletteOptions["mode"];
 }) {
   return (
-    <Fab onClick={props.handleThemeToggle} className={styles.main}>
+    <Fab
+      onClick={props.handleThemeToggle}
+      className={styles.main}
+      color="primary"
+    >
       {props.currentThemePalette === "light" ? (
         <DarkModeIcon />
       ) : (
