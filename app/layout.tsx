@@ -17,7 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={uiConfig.defaultThemePalette}>
+    <html
+      lang="en"
+      className={uiConfig.defaultThemePalette}
+      suppressHydrationWarning={true}
+    >
       <body>
         <Providers>{children}</Providers>
       </body>
