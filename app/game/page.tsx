@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import { IoMdHeart, IoMdTrophy } from "react-icons/io";
@@ -30,6 +31,8 @@ export default function Game() {
   const [question, changeQuestion] = useState<Question | null>(null);
   const [previousQuestions, changePreviousQuestions] = useState<Questions>([]);
   const [userInput, changeUserInput] = useState("");
+  const [isTransitionVisible, changeIsTransitionVisible] = useState(false);
+  const [livesLeft, changeLivesLeft] = useState(3);
   // functions
   const handleUserInputOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (!question) {
@@ -47,7 +50,15 @@ export default function Game() {
       questionClone.givenAnswer = newValueInt;
       newPreviousQuestions.push(questionClone);
       changePreviousQuestions(newPreviousQuestions);
-      changeQuestion(getQuestion(nextRound));
+
+      changeIsTransitionVisible(true);
+      setTimeout(() => {
+        changeQuestion(getQuestion(nextRound));
+      }, 1000);
+
+      setTimeout(() => {
+        changeIsTransitionVisible(false);
+      }, 2000);
     } else {
       changeUserInput(newValue);
     }
@@ -75,12 +86,26 @@ export default function Game() {
   return (
     <div className="flex justify-center items-center h-screen w-screen">
       <Card className="max-w-[80%]">
+        <AnimatePresence>
+          {isTransitionVisible && (
+            <motion.div
+              className="z-20 h-full w-full flex items-center justify-center bg-success absolute"
+              initial={{ y: 1000 }}
+              animate={{ y: -1000 }}
+              transition={{
+                duration: 2,
+              }}
+            >
+              hello
+            </motion.div>
+          )}
+        </AnimatePresence>
         <CardHeader className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <Button
             startContent={<IoMdHeart className="text-danger text-xl" />}
             className="col-span-2 md:col-span-1"
           >
-            lives: 3
+            lives: {livesLeft}
           </Button>
           <Button startContent={<MdSportsScore className="text-xl" />}>
             score: {previousQuestions.length}
@@ -107,6 +132,7 @@ export default function Game() {
             value={userInput}
             onChange={handleUserInputOnChange}
           />
+
           <Progress aria-label="Loading..." value={60} className="max-w-md" />
         </CardBody>
         <Divider />
@@ -117,6 +143,7 @@ export default function Game() {
           </Button>
         </CardFooter>
       </Card>
+
       <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>
           {(onClose) => (
