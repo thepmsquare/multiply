@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { ChangeEventHandler, useEffect, useState } from "react";
 import { IoMdHeart, IoMdTrophy } from "react-icons/io";
 import { MdSportsScore } from "react-icons/md";
 
 import ThemeToggleFAB from "@/components/ThemeToggleFAB";
+import { Question, Questions } from "@/types/Questions";
 import {
   Button,
   Card,
@@ -15,20 +16,59 @@ import {
   Divider,
   Input,
   Modal,
-  ModalBody,
   ModalContent,
   ModalFooter,
   ModalHeader,
   Progress,
+  Spinner,
   useDisclosure,
 } from "@nextui-org/react";
 
 export default function Game() {
-  // state
+  // hooks
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const [question, changeQuestion] = useState<Question | null>(null);
+  const [previousQuestions, changePreviousQuestions] = useState<Questions>([]);
+  const [userInput, changeUserInput] = useState("");
   // functions
+  const handleUserInputOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    if (!question) {
+      return;
+    }
+    let newValue = e.target.value;
+    let newValueInt = parseInt(newValue);
+    if (newValueInt === question.correctAnswer) {
+      changeUserInput("");
+      let nextRound = previousQuestions.length + 1;
+      let newPreviousQuestions: Questions = JSON.parse(
+        JSON.stringify(previousQuestions)
+      );
+      let questionClone: Question = JSON.parse(JSON.stringify(question));
+      questionClone.givenAnswer = newValueInt;
+      newPreviousQuestions.push(questionClone);
+      changePreviousQuestions(newPreviousQuestions);
+      changeQuestion(getQuestion(nextRound));
+    } else {
+      changeUserInput(newValue);
+    }
+  };
+  const getQuestion = (round: number) => {
+    const p1 = Math.floor(Math.random() * 10) + 1;
+    const p2 = Math.floor(Math.random() * 10) + 1;
+    let question: Question = {
+      p1,
+      p2,
+      correctAnswer: p1 * p2,
+      givenAnswer: null,
+      round,
+    };
 
+    return question;
+  };
   // use effect
+  useEffect(() => {
+    changeQuestion(getQuestion(1));
+  }, []);
 
   // misc
 
@@ -40,10 +80,10 @@ export default function Game() {
             startContent={<IoMdHeart className="text-danger text-xl" />}
             className="col-span-2 md:col-span-1"
           >
-            lives: 2
+            lives: 3
           </Button>
           <Button startContent={<MdSportsScore className="text-xl" />}>
-            score: 4
+            score: {previousQuestions.length}
           </Button>
           <Button
             startContent={<IoMdTrophy className="text-success text-xl" />}
@@ -53,8 +93,20 @@ export default function Game() {
         </CardHeader>
         <Divider />
         <CardBody className="flex flex-col gap-10 py-10 w-4/5 mx-auto">
-          <p className="text-center text-3xl">5 * 3 = </p>
-          <Input type="number" label="your answer" autoFocus />
+          {question ? (
+            <p className="text-center text-3xl">
+              {question.p1} * {question.p2} ={" "}
+            </p>
+          ) : (
+            <Spinner />
+          )}
+          <Input
+            type="number"
+            label="your answer"
+            autoFocus
+            value={userInput}
+            onChange={handleUserInputOnChange}
+          />
           <Progress aria-label="Loading..." value={60} className="max-w-md" />
         </CardBody>
         <Divider />
