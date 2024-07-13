@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import { IoMdHeart, IoMdTrophy } from "react-icons/io";
 import { MdSportsScore } from "react-icons/md";
+import SlotCounter from "react-slot-counter";
 
 import ThemeToggleFAB from "@/components/ThemeToggleFAB";
 import { Question, Questions } from "@/types/Questions";
@@ -50,15 +51,15 @@ export default function Game() {
       questionClone.givenAnswer = newValueInt;
       newPreviousQuestions.push(questionClone);
       changePreviousQuestions(newPreviousQuestions);
+      changeQuestion(getQuestion(nextRound));
+      // changeIsTransitionVisible(true);
+      // setTimeout(() => {
+      //   changeQuestion(getQuestion(nextRound));
+      // }, 1000);
 
-      changeIsTransitionVisible(true);
-      setTimeout(() => {
-        changeQuestion(getQuestion(nextRound));
-      }, 1000);
-
-      setTimeout(() => {
-        changeIsTransitionVisible(false);
-      }, 2000);
+      // setTimeout(() => {
+      //   changeIsTransitionVisible(false);
+      // }, 2000);
     } else {
       changeUserInput(newValue);
     }
@@ -105,23 +106,28 @@ export default function Game() {
             startContent={<IoMdHeart className="text-danger text-xl" />}
             className="col-span-2 md:col-span-1"
           >
-            lives: {livesLeft}
+            <SlotCounter value={`lives: ${livesLeft}`} useMonospaceWidth />
           </Button>
           <Button startContent={<MdSportsScore className="text-xl" />}>
-            score: {previousQuestions.length}
+            <SlotCounter
+              value={`score: ${previousQuestions.length}`}
+              useMonospaceWidth
+            />
           </Button>
           <Button
             startContent={<IoMdTrophy className="text-success text-xl" />}
           >
-            high score: 7
+            <SlotCounter value={`high score: 7`} useMonospaceWidth />
           </Button>
         </CardHeader>
         <Divider />
-        <CardBody className="flex flex-col gap-10 py-10 w-4/5 mx-auto">
+        <CardBody className="flex flex-col gap-10 py-10 w-4/5 mx-auto text-center">
           {question ? (
-            <p className="text-center text-3xl">
-              {question.p1} * {question.p2} ={" "}
-            </p>
+            <SlotCounter
+              value={`${question.p1} * ${question.p2} = `}
+              charClassName="text-3xl m-1"
+              useMonospaceWidth
+            />
           ) : (
             <Spinner />
           )}
