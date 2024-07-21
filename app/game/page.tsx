@@ -106,18 +106,16 @@ export default function Game() {
             startContent={<IoMdHeart className="text-danger text-xl" />}
             className="col-span-2 md:col-span-1"
           >
-            <SlotCounter value={`lives: ${livesLeft}`} useMonospaceWidth />
+            lives: <SlotCounter value={livesLeft} useMonospaceWidth />
           </Button>
           <Button startContent={<MdSportsScore className="text-xl" />}>
-            <SlotCounter
-              value={`score: ${previousQuestions.length}`}
-              useMonospaceWidth
-            />
+            score:{" "}
+            <SlotCounter value={previousQuestions.length} useMonospaceWidth />
           </Button>
           <Button
             startContent={<IoMdTrophy className="text-success text-xl" />}
           >
-            <SlotCounter value={`high score: 7`} useMonospaceWidth />
+            high score: <SlotCounter value={7} useMonospaceWidth />
           </Button>
         </CardHeader>
         <Divider />
