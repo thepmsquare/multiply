@@ -51,15 +51,13 @@ export default function Game() {
       questionClone.givenAnswer = newValueInt;
       newPreviousQuestions.push(questionClone);
       changePreviousQuestions(newPreviousQuestions);
-      changeQuestion(getQuestion(nextRound));
-      // changeIsTransitionVisible(true);
-      // setTimeout(() => {
-      //   changeQuestion(getQuestion(nextRound));
-      // }, 1000);
 
-      // setTimeout(() => {
-      //   changeIsTransitionVisible(false);
-      // }, 2000);
+      changeIsTransitionVisible(true);
+
+      setTimeout(() => {
+        changeIsTransitionVisible(false);
+        changeQuestion(getQuestion(nextRound));
+      }, 2000);
     } else {
       changeUserInput(newValue);
     }
@@ -87,20 +85,6 @@ export default function Game() {
   return (
     <div className="flex justify-center items-center h-screen w-screen">
       <Card className="max-w-[80%]">
-        <AnimatePresence>
-          {isTransitionVisible && (
-            <motion.div
-              className="z-20 h-full w-full flex items-center justify-center bg-success absolute"
-              initial={{ y: 1000 }}
-              animate={{ y: -1000 }}
-              transition={{
-                duration: 2,
-              }}
-            >
-              hello
-            </motion.div>
-          )}
-        </AnimatePresence>
         <CardHeader className="grid grid-cols-2 md:grid-cols-3 gap-4">
           <Button
             startContent={<IoMdHeart className="text-danger text-xl" />}
@@ -121,11 +105,19 @@ export default function Game() {
         <Divider />
         <CardBody className="flex flex-col gap-10 py-10 w-4/5 mx-auto text-center">
           {question ? (
-            <SlotCounter
-              value={`${question.p1} * ${question.p2} = `}
-              charClassName="text-3xl m-1"
-              useMonospaceWidth
-            />
+            <div className="flex justify-center">
+              <SlotCounter
+                value={`${question.p1} * ${question.p2} = `}
+                charClassName="text-3xl m-1"
+                useMonospaceWidth
+              />
+
+              <SlotCounter
+                value={isTransitionVisible ? question.correctAnswer : "?"}
+                charClassName="text-3xl m-1"
+                useMonospaceWidth
+              />
+            </div>
           ) : (
             <Spinner />
           )}
