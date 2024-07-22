@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import { IoMdHeart, IoMdTrophy } from "react-icons/io";
@@ -57,7 +56,7 @@ export default function Game() {
       setTimeout(() => {
         changeIsTransitionVisible(false);
         changeQuestion(getQuestion(nextRound));
-      }, 2000);
+      }, 1200);
     } else {
       changeUserInput(newValue);
     }
@@ -75,6 +74,31 @@ export default function Game() {
 
     return question;
   };
+
+  const handleSkip = () => {
+    if (livesLeft > 1) {
+      changeLivesLeft(livesLeft - 1);
+      let oldUserInput = parseInt(userInput);
+      changeUserInput("");
+      let nextRound = previousQuestions.length + 1;
+      let newPreviousQuestions: Questions = JSON.parse(
+        JSON.stringify(previousQuestions)
+      );
+      let questionClone: Question = JSON.parse(JSON.stringify(question));
+      questionClone.givenAnswer = oldUserInput;
+      newPreviousQuestions.push(questionClone);
+      changePreviousQuestions(newPreviousQuestions);
+      changeIsTransitionVisible(true);
+
+      setTimeout(() => {
+        changeIsTransitionVisible(false);
+        changeQuestion(getQuestion(nextRound));
+      }, 1200);
+    } else {
+      // handle game end
+    }
+  };
+
   // use effect
   useEffect(() => {
     changeQuestion(getQuestion(1));
@@ -114,7 +138,9 @@ export default function Game() {
 
               <SlotCounter
                 value={isTransitionVisible ? question.correctAnswer : "?"}
-                charClassName="text-3xl m-1"
+                charClassName={`text-3xl m-1 ${
+                  isTransitionVisible ? "text-success" : ""
+                }`}
                 useMonospaceWidth
               />
             </div>
@@ -133,7 +159,9 @@ export default function Game() {
         </CardBody>
         <Divider />
         <CardFooter className="flex gap-4">
-          <Button className="w-full">skip</Button>
+          <Button className="w-full" onPress={handleSkip}>
+            skip
+          </Button>
           <Button color="danger" className="w-full" onPress={onOpen}>
             exit
           </Button>
