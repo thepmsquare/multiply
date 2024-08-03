@@ -29,10 +29,11 @@ export default function Game() {
   // hooks
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [question, changeQuestion] = useState<Question | null>(null);
-  const [previousQuestions, changePreviousQuestions] = useState<Questions>([]);
   const [userInput, changeUserInput] = useState("");
   const [isTransitionVisible, changeIsTransitionVisible] = useState(false);
   const [livesLeft, changeLivesLeft] = useState(3);
+  const [currentRound, changeCurrentRound] = useState(0);
+  const [score, changeScore] = useState(0);
   // functions
   const handleUserInputOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (!question) {
@@ -42,17 +43,10 @@ export default function Game() {
     let newValueInt = parseInt(newValue);
     if (newValueInt === question.correctAnswer) {
       changeUserInput("");
-      let nextRound = previousQuestions.length + 1;
-      let newPreviousQuestions: Questions = JSON.parse(
-        JSON.stringify(previousQuestions)
-      );
-      let questionClone: Question = JSON.parse(JSON.stringify(question));
-      questionClone.givenAnswer = newValueInt;
-      newPreviousQuestions.push(questionClone);
-      changePreviousQuestions(newPreviousQuestions);
-
+      let nextRound = currentRound + 1;
+      changeCurrentRound(nextRound);
+      changeScore(score + 1);
       changeIsTransitionVisible(true);
-
       setTimeout(() => {
         changeIsTransitionVisible(false);
         changeQuestion(getQuestion(nextRound));
@@ -78,20 +72,13 @@ export default function Game() {
   const handleSkip = () => {
     if (livesLeft > 1) {
       changeLivesLeft(livesLeft - 1);
-      let oldUserInput = parseInt(userInput);
       changeUserInput("");
-      let nextRound = previousQuestions.length + 1;
-      let newPreviousQuestions: Questions = JSON.parse(
-        JSON.stringify(previousQuestions)
-      );
-      let questionClone: Question = JSON.parse(JSON.stringify(question));
-      questionClone.givenAnswer = oldUserInput;
-      newPreviousQuestions.push(questionClone);
-      changePreviousQuestions(newPreviousQuestions);
+      let nextRound = currentRound + 1;
       changeIsTransitionVisible(true);
 
       setTimeout(() => {
         changeIsTransitionVisible(false);
+        changeCurrentRound(nextRound);
         changeQuestion(getQuestion(nextRound));
       }, 1200);
     } else {
@@ -101,7 +88,8 @@ export default function Game() {
 
   // use effect
   useEffect(() => {
-    changeQuestion(getQuestion(1));
+    changeCurrentRound(1);
+    changeQuestion(getQuestion(currentRound));
   }, []);
 
   // misc
@@ -117,7 +105,7 @@ export default function Game() {
             lives: <SlotCounter value={livesLeft} />
           </Button>
           <Button startContent={<MdSportsScore className="text-xl" />}>
-            score: <SlotCounter value={previousQuestions.length} />
+            score: <SlotCounter value={score} />
           </Button>
           <Button
             startContent={<IoMdTrophy className="text-success text-xl" />}
@@ -127,6 +115,7 @@ export default function Game() {
         </CardHeader>
         <Divider />
         <CardBody className="flex flex-col gap-10 py-10 w-4/5 mx-auto text-center">
+          <p>Round: {currentRound}</p>
           {question ? (
             <div className="flex justify-center">
               <SlotCounter
