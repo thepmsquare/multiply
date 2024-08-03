@@ -1,2 +1,4 @@
-interface LocalStorageVariablesConfig {}
+interface LocalStorageVariablesConfig {
+  highScoreKeyName: string;
+}
 export default LocalStorageVariablesConfig;

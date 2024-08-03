@@ -13,6 +13,7 @@ import { MdSportsScore } from "react-icons/md";
 import SlotCounter from "react-slot-counter";
 
 import ThemeToggleFAB from "@/components/ThemeToggleFAB";
+import localStorageVariablesConfig from "@/configs/localStorageVariables";
 import { Question, Questions } from "@/types/Questions";
 import {
   Button,
@@ -32,6 +33,20 @@ import {
 } from "@nextui-org/react";
 
 export default function Game() {
+  // get stuff from local storage
+  let localStorageHighScore = window.localStorage.getItem(
+    localStorageVariablesConfig.highScoreKeyName
+  );
+  let defaultValueForHighScore: number;
+  if (localStorageHighScore) {
+    defaultValueForHighScore = parseInt(localStorageHighScore);
+  } else {
+    window.localStorage.setItem(
+      localStorageVariablesConfig.highScoreKeyName,
+      "0"
+    );
+    defaultValueForHighScore = 0;
+  }
   // hooks
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [question, changeQuestion] = useState<Question | null>(null);
@@ -44,6 +59,7 @@ export default function Game() {
   const [allowedTime, changeAllowedTime] = useState(10000);
   const [isEnd, changeIsEnd] = useState(false);
   const timerId: MutableRefObject<null | NodeJS.Timeout> = useRef(null);
+  const [highScore, changeHighScore] = useState(defaultValueForHighScore);
 
   // functions
   const handleUserInputOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -56,7 +72,15 @@ export default function Game() {
       changeUserInput("");
       let nextRound = currentRound + 1;
       changeCurrentRound(nextRound);
-      changeScore(score + 1);
+      let newScore = score + 1;
+      changeScore(newScore);
+      if (newScore > highScore) {
+        changeHighScore(newScore);
+        window.localStorage.setItem(
+          localStorageVariablesConfig.highScoreKeyName,
+          newScore.toString()
+        );
+      }
       changeIsTransitionVisible(true);
       if (timerId.current) {
         clearInterval(timerId.current);
@@ -160,7 +184,7 @@ export default function Game() {
               <Button
                 startContent={<IoMdTrophy className="text-success text-xl" />}
               >
-                high score: <SlotCounter value={7} />
+                high score: <SlotCounter value={highScore} />
               </Button>
             </CardHeader>
             <Divider />
