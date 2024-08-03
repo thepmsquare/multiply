@@ -33,20 +33,26 @@ import {
 } from "@nextui-org/react";
 
 export default function Game() {
-  // get stuff from local storage
-  let localStorageHighScore = window.localStorage.getItem(
-    localStorageVariablesConfig.highScoreKeyName
-  );
   let defaultValueForHighScore: number;
-  if (localStorageHighScore) {
-    defaultValueForHighScore = parseInt(localStorageHighScore);
-  } else {
-    window.localStorage.setItem(
-      localStorageVariablesConfig.highScoreKeyName,
-      "0"
+  if (typeof window !== "undefined") {
+    // get stuff from local storage
+    let localStorageHighScore = window.localStorage.getItem(
+      localStorageVariablesConfig.highScoreKeyName
     );
+
+    if (localStorageHighScore) {
+      defaultValueForHighScore = parseInt(localStorageHighScore);
+    } else {
+      window.localStorage.setItem(
+        localStorageVariablesConfig.highScoreKeyName,
+        "0"
+      );
+      defaultValueForHighScore = 0;
+    }
+  } else {
     defaultValueForHighScore = 0;
   }
+
   // hooks
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [question, changeQuestion] = useState<Question | null>(null);
@@ -79,10 +85,12 @@ export default function Game() {
       changeScore(newScore);
       if (newScore > highScore) {
         changeHighScore(newScore);
-        window.localStorage.setItem(
-          localStorageVariablesConfig.highScoreKeyName,
-          newScore.toString()
-        );
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem(
+            localStorageVariablesConfig.highScoreKeyName,
+            newScore.toString()
+          );
+        }
       }
       changeIsTransitionVisible(true);
       changeTransitionColor("success");
