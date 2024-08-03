@@ -58,14 +58,15 @@ export default function Game() {
       changeCurrentRound(nextRound);
       changeScore(score + 1);
       changeIsTransitionVisible(true);
+      if (timerId.current) {
+        clearInterval(timerId.current);
+      }
       setTimeout(() => {
         changeIsTransitionVisible(false);
         changeQuestion(getQuestion(nextRound));
         changeAllowedTime(10000);
         changeTimeLeft(10000);
-        if (timerId.current) {
-          clearInterval(timerId.current);
-        }
+
         timerId.current = setInterval(() => {
           changeTimeLeft((prevTimeLeft) => prevTimeLeft - 1000);
         }, 1000);
@@ -94,7 +95,9 @@ export default function Game() {
       changeUserInput("");
       let nextRound = currentRound + 1;
       changeIsTransitionVisible(true);
-
+      if (timerId.current) {
+        clearInterval(timerId.current);
+      }
       setTimeout(() => {
         changeIsTransitionVisible(false);
         changeCurrentRound(nextRound);
@@ -102,9 +105,7 @@ export default function Game() {
 
         changeAllowedTime(10000);
         changeTimeLeft(10000);
-        if (timerId.current) {
-          clearInterval(timerId.current);
-        }
+
         timerId.current = setInterval(() => {
           changeTimeLeft((prevTimeLeft) => prevTimeLeft - 1000);
         }, 1000);
