@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "@fontsource/fira-mono";
+import "@fontsource/inter";
 
 import brandConfig from "@/configs/brand";
 import uiConfig from "@/configs/ui";

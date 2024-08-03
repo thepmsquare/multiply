@@ -114,16 +114,15 @@ export default function Game() {
             startContent={<IoMdHeart className="text-danger text-xl" />}
             className="col-span-2 md:col-span-1"
           >
-            lives: <SlotCounter value={livesLeft} useMonospaceWidth />
+            lives: <SlotCounter value={livesLeft} />
           </Button>
           <Button startContent={<MdSportsScore className="text-xl" />}>
-            score:{" "}
-            <SlotCounter value={previousQuestions.length} useMonospaceWidth />
+            score: <SlotCounter value={previousQuestions.length} />
           </Button>
           <Button
             startContent={<IoMdTrophy className="text-success text-xl" />}
           >
-            high score: <SlotCounter value={7} useMonospaceWidth />
+            high score: <SlotCounter value={7} />
           </Button>
         </CardHeader>
         <Divider />
@@ -133,7 +132,6 @@ export default function Game() {
               <SlotCounter
                 value={`${question.p1} * ${question.p2} = `}
                 charClassName="text-3xl m-1"
-                useMonospaceWidth
               />
 
               <SlotCounter
@@ -141,7 +139,6 @@ export default function Game() {
                 charClassName={`text-3xl m-1 ${
                   isTransitionVisible ? "text-success" : ""
                 }`}
-                useMonospaceWidth
               />
             </div>
           ) : (
