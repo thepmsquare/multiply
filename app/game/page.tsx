@@ -1,7 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { ChangeEventHandler, useEffect, useState } from "react";
+import {
+  ChangeEventHandler,
+  MutableRefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { IoMdHeart, IoMdTrophy } from "react-icons/io";
 import { MdSportsScore } from "react-icons/md";
 import SlotCounter from "react-slot-counter";
@@ -34,6 +40,10 @@ export default function Game() {
   const [livesLeft, changeLivesLeft] = useState(3);
   const [currentRound, changeCurrentRound] = useState(0);
   const [score, changeScore] = useState(0);
+  const [timeLeft, changeTimeLeft] = useState(10000);
+  const [allowedTime, changeAllowedTime] = useState(10000);
+  const timerId: MutableRefObject<null | NodeJS.Timeout> = useRef(null);
+
   // functions
   const handleUserInputOnChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     if (!question) {
@@ -50,6 +60,14 @@ export default function Game() {
       setTimeout(() => {
         changeIsTransitionVisible(false);
         changeQuestion(getQuestion(nextRound));
+        changeAllowedTime(10000);
+        changeTimeLeft(10000);
+        if (timerId.current) {
+          clearInterval(timerId.current);
+        }
+        timerId.current = setInterval(() => {
+          changeTimeLeft((prevTimeLeft) => prevTimeLeft - 1000);
+        }, 1000);
       }, 1200);
     } else {
       changeUserInput(newValue);
@@ -80,6 +98,15 @@ export default function Game() {
         changeIsTransitionVisible(false);
         changeCurrentRound(nextRound);
         changeQuestion(getQuestion(nextRound));
+
+        changeAllowedTime(10000);
+        changeTimeLeft(10000);
+        if (timerId.current) {
+          clearInterval(timerId.current);
+        }
+        timerId.current = setInterval(() => {
+          changeTimeLeft((prevTimeLeft) => prevTimeLeft - 1000);
+        }, 1000);
       }, 1200);
     } else {
       // handle game end
@@ -88,8 +115,20 @@ export default function Game() {
 
   // use effect
   useEffect(() => {
+    if (timeLeft <= 0 && timerId.current) {
+      clearInterval(timerId.current);
+      timerId.current = null;
+      handleSkip();
+    }
+  }, [timeLeft]);
+  useEffect(() => {
     changeCurrentRound(1);
     changeQuestion(getQuestion(currentRound));
+    if (!timerId.current) {
+      timerId.current = setInterval(() => {
+        changeTimeLeft((prevTimeLeft) => prevTimeLeft - 1000);
+      }, 1000);
+    }
   }, []);
 
   // misc
@@ -140,8 +179,11 @@ export default function Game() {
             value={userInput}
             onChange={handleUserInputOnChange}
           />
-
-          <Progress aria-label="Loading..." value={60} className="max-w-md" />
+          <Progress
+            aria-label="Loading..."
+            value={(timeLeft / allowedTime) * 100}
+            className="max-w-md"
+          />
         </CardBody>
         <Divider />
         <CardFooter className="flex gap-4">
