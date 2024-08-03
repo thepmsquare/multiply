@@ -75,6 +75,7 @@ export default function Game() {
       changeUserInput(newValue);
     }
   };
+
   const getQuestion = (round: number) => {
     const p1 = Math.floor(Math.random() * 10) + 1;
     const p2 = Math.floor(Math.random() * 10) + 1;
@@ -192,6 +193,13 @@ export default function Game() {
               <Progress
                 aria-label="Loading..."
                 value={(timeLeft / allowedTime) * 100}
+                color={
+                  (timeLeft / allowedTime) * 100 > 66
+                    ? "primary"
+                    : (timeLeft / allowedTime) * 100 > 33
+                    ? "warning"
+                    : "danger"
+                }
                 className="max-w-md"
               />
             </CardBody>
