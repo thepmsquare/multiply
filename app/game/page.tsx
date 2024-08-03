@@ -52,6 +52,9 @@ export default function Game() {
   const [question, changeQuestion] = useState<Question | null>(null);
   const [userInput, changeUserInput] = useState("");
   const [isTransitionVisible, changeIsTransitionVisible] = useState(false);
+  const [transitionColor, changeTransitionColor] = useState<
+    "success" | "danger"
+  >("success");
   const [livesLeft, changeLivesLeft] = useState(3);
   const [currentRound, changeCurrentRound] = useState(0);
   const [score, changeScore] = useState(0);
@@ -82,6 +85,7 @@ export default function Game() {
         );
       }
       changeIsTransitionVisible(true);
+      changeTransitionColor("success");
       if (timerId.current) {
         clearInterval(timerId.current);
       }
@@ -120,6 +124,7 @@ export default function Game() {
       changeUserInput("");
       let nextRound = currentRound + 1;
       changeIsTransitionVisible(true);
+      changeTransitionColor("danger");
       if (timerId.current) {
         clearInterval(timerId.current);
       }
@@ -138,6 +143,7 @@ export default function Game() {
     } else {
       // handle game end
       changeIsTransitionVisible(true);
+      changeTransitionColor("danger");
       setTimeout(() => {
         changeIsTransitionVisible(false);
         changeIsEnd(true);
@@ -189,7 +195,19 @@ export default function Game() {
             </CardHeader>
             <Divider />
             <CardBody className="flex flex-col gap-10 py-10 w-4/5 mx-auto text-center">
-              <p>Round: {currentRound}</p>
+              <SlotCounter
+                value={
+                  isTransitionVisible
+                    ? transitionColor === "danger"
+                      ? "-1"
+                      : "+1"
+                    : "Round: " + currentRound
+                }
+                charClassName={`text-l m-1 ${
+                  isTransitionVisible ? "text-" + transitionColor : ""
+                }`}
+              />
+
               {question ? (
                 <div className="flex justify-center">
                   <SlotCounter
@@ -200,7 +218,7 @@ export default function Game() {
                   <SlotCounter
                     value={isTransitionVisible ? question.correctAnswer : "?"}
                     charClassName={`text-3xl m-1 ${
-                      isTransitionVisible ? "text-success" : ""
+                      isTransitionVisible ? "text-" + transitionColor : ""
                     }`}
                   />
                 </div>
